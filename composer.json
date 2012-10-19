@@ -1,11 +1,22 @@
 {
-    "name": "simplethings/entity-audit-bundle",
+    "name": "rmzamora/entity-audit-bundle",
     "license": "New BSD",
-    "keywords": ["Persistence", "Database", "Audit"],
-    "description": "Audit for Doctrine Entities",
+    "keywords": ["Persistence", "Database", "Audit", "rmzamora forked"],
+    "description": "Audit for Doctrine Entities as forked of simplethings",
+    "authors": [
+        {
+            "name": "simplethings.de",
+            "homepage": "http://www.simplethings.de"
+        },
+        {
+            "name": "mell zamora",
+            "email": "me@rmzamora.com",
+            "homepage": "http://rmzamora.com"
+        },         
+    ],    
     "require": {
         "doctrine/orm": ">=2.1.0,<2.4"
-    },
+    },    
     "require-dev": {
         "symfony/framework-bundle": "*"
     },
