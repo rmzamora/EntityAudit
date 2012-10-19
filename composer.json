@@ -3,6 +3,17 @@
     "license": "New BSD",
     "keywords": ["Persistence", "Database", "Audit", "rmzamora forked"],
     "description": "Audit for Doctrine Entities as forked of simplethings",
+    "authors": [
+        {
+            "name": "simplethings.de",
+            "homepage": "http://www.simplethings.de"
+        },
+        {
+            "name": "mell zamora",
+            "email": "me@rmzamora.com",
+            "homepage": "http://rmzamora.com"
+        }
+    ],
     "require": {
         "doctrine/orm": ">=2.1.0,<2.4"
     },
