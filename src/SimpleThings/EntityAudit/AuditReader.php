@@ -132,7 +132,7 @@ class AuditReader
             $revisionData[$fieldName] = $row[$fieldName];
         }
 
-        return $this->createEntity($class->name, $revisionData);
+        return $this->createEntity($class->name, $row);
     }
 
     /**
@@ -353,6 +353,54 @@ class AuditReader
         }
 
         return $revisions;
+    }
+
+    /**
+     * Gets the current revision of the entity with given ID.
+     *
+     * @param string $className
+     * @param mixed $id
+     *
+     * @throws AuditException
+     * @return integer
+     */
+    public function getCurrentRevision($className, $id)
+    {
+        if (!$this->metadataFactory->isAudited($className)) {
+            throw AuditException::notAudited($className);
+        }
+
+        $class = $this->em->getClassMetadata($className);
+        $tableName = $this->config->getTablePrefix() . $class->table['name'] . $this->config->getTableSuffix();
+
+        if (!is_array($id)) {
+            $id = array($class->identifier[0] => $id);
+        }
+
+        $whereSQL = "";
+        foreach ($class->identifier AS $idField) {
+            if (isset($class->fieldMappings[$idField])) {
+                if ($whereSQL) {
+                    $whereSQL .= " AND ";
+                }
+                $whereSQL .= "e." . $class->fieldMappings[$idField]['columnName'] . " = ?";
+            } else if (isset($class->associationMappings[$idField])) {
+                if ($whereSQL) {
+                    $whereSQL .= " AND ";
+                }
+                $whereSQL .= "e." . $class->associationMappings[$idField]['joinColumns'][0] . " = ?";
+            }
+        }
+
+//     	$query = "SELECT e.".$this->config->getRevisionFieldName()." FROM " . $tableName . " e " .
+//     			"INNER JOIN " . $tableName . " e ON r.id = e." . $this->config->getRevisionFieldName() . " WHERE " . $whereSQL . " ORDER BY r.id DESC";
+
+        $query = "SELECT e.".$this->config->getRevisionFieldName()." FROM " . $tableName . " e " .
+                 " WHERE " . $whereSQL . " ORDER BY e.".$this->config->getRevisionFieldName()." DESC";
+
+        $revision = $this->em->getConnection()->fetchColumn($query, array_values($id));
+
+        return $revision;
     }
 
     protected function getEntityPersister($entity)

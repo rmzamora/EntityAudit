@@ -214,9 +214,10 @@ class LogRevisionsListener implements EventSubscriber
 
         foreach ($class->associationMappings AS $field => $assoc) {
             if (($assoc['type'] & ClassMetadata::TO_ONE) > 0 && $assoc['isOwningSide']) {
-                $targetClass = $this->em->getClassMetadata($assoc['targetEntity']);
 
-                if ($entityData[$field] !== null) {
+                $relatedId = array();
+
+                if ($entityData[$field] !== null && $this->uow->isInIdentityMap($entityData[$field])) {
                     $relatedId = $this->uow->getEntityIdentifier($entityData[$field]);
                 }
 
@@ -227,7 +228,7 @@ class LogRevisionsListener implements EventSubscriber
                         $params[] = null;
                         $types[] = \PDO::PARAM_STR;
                     } else {
-                        $params[] = $relatedId[$targetClass->fieldNames[$targetColumn]];
+                        $params[] = $relatedId ? $relatedId[$targetClass->fieldNames[$targetColumn]] : null;
                         $types[] = $targetClass->getTypeOfColumn($targetColumn);
                     }
                 }
