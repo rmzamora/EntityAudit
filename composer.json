@@ -22,6 +22,12 @@
     },
     "autoload": {
         "psr-0": {"SimpleThings\\EntityAudit": "src/"}
+    },
+
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.x-dev"
+        }
     }
 }
 
